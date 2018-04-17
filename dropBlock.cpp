@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int boardsize = 5;
+int boardsize = 6;
 
 void WelcomeMessage()
 {
@@ -53,7 +53,10 @@ void board() {
 
 	//print A B C D and | |
 	for (int i = 0; i < boardsize; i++) {
-		cout << i << " |";
+		char k='A';
+		(int)k;
+		k=k+i;
+		cout << (char)k << " |";
 
 		for (int i = 0; i < (boardsize * 2 + 1); i++) {
 			cout << " ";
@@ -72,7 +75,7 @@ void StartGame()
 	board();
 
 	//Board size code
-	
+    
 
 }
 
@@ -83,16 +86,16 @@ void ChangeBoardSize()
 	cout << "----------------------------------------------" << endl;
 	cout << "[1] Change Board Size" << endl; //test only, del after finishing the code
 	cout << "You can change board size here." << endl;
-	cout << "Please enter a size(5-8): ";
+	cout << "Please enter a size(6-10): ";
 	cin >> num;
-	if (num >= 5 && num <= 8)
+	if (num >= 6 && num <= 10)
 	{
 		boardsize = num;
 		cout << "You have changed the Board Size to " << boardsize << endl;
 		cout << "----------------------------------------------" << endl;
 	}
 	else {
-		cout << "You can only enter 5-8! " << endl;
+		cout << "You can only enter 6-10! " << endl;
 		cout << "----------------------------------------------" << endl;
 		ChangeBoardSize();
 	}
@@ -115,9 +118,9 @@ void Settings()
 	{
 	case 1: ChangeBoardSize(); break;
 	case 2: break;
-		default:
-			cout << "Option (1 - 2) only!";
-			break;
+	default:
+		cout << "Option (1 - 2) only!";
+		break;
 	}
 
 
@@ -138,7 +141,6 @@ void Credits()
 }
 
 void exit() {
-    //Insert exit code here
 	cout << "exit";
 
 }
@@ -174,5 +176,5 @@ int main() {
 	} while (choice != 5);
 
 	exit();
-    return 0;
+	return 0;
 }
