@@ -75,7 +75,7 @@ void StartGame()
 	board();
 
 	//Board size code
-
+    
 
 }
 
@@ -86,16 +86,16 @@ void ChangeBoardSize()
 	cout << "----------------------------------------------" << endl;
 	cout << "[1] Change Board Size" << endl; //test only, del after finishing the code
 	cout << "You can change board size here." << endl;
-	cout << "Please enter a size(6-8): ";
+	cout << "Please enter a size(6-10): ";
 	cin >> num;
-	if (num >= 6 && num <= 8)
+	if (num >= 6 && num <= 10)
 	{
 		boardsize = num;
 		cout << "You have changed the Board Size to " << boardsize << endl;
 		cout << "----------------------------------------------" << endl;
 	}
 	else {
-		cout << "You can only enter 6-8! " << endl;
+		cout << "You can only enter 6-10! " << endl;
 		cout << "----------------------------------------------" << endl;
 		ChangeBoardSize();
 	}
@@ -141,13 +141,12 @@ void Credits()
 }
 
 void exit() {
-	//Insert exit code here
 	cout << "exit";
 
 }
 
 int main() {
-	int choice;
+   	int choice;
 
 	WelcomeMessage();
 
