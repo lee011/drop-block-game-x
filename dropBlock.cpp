@@ -1,9 +1,14 @@
 #include <iostream>
 #include <iomanip>
-
+#include <ctime>
+#include <cstdlib>
+#include <stdlib.h>
 using namespace std;
 
 int boardsize = 6;
+const int rows = 10;
+const int columns = 10;
+char game[rows][columns] = {0};
 
 void WelcomeMessage()
 {
@@ -20,64 +25,118 @@ void WelcomeMessage()
 	cout << setw(78) << " +-------------+ +---+ +-------+ +---------+ +-------+" << endl;
 }
 
-//function used for printing +------+
-void printrow() {
-	cout << "  ";
-	int count = 0;
-	for (int i = 0; i < 2; i++) {
-		cout << "+";
 
-		if (count < 1) {
-			for (int i = 0; i < (boardsize * 2 + 1); i++)
-				cout << "-";
+class board {
+public:
+	//function used for printing +------+
+	void printrow() {
+		cout << "  ";
+		int count = 0;
+		for (int i = 0; i < 2; i++) {
+			cout << "+";
+			if (count < 1) {
+				for (int i = 0; i < (boardsize * 2 + 1); i++)
+					cout << "-";
+			}
+			count++;
 		}
-		count++;
+		cout << endl;
 	}
-	cout << endl;
+	void printArray() {
+		printboard();
+		printrow();
+		for (int i = 0; i < boardsize; i++) {
 
-}
-
-//function used for print board
-void board() {
-	cout << endl;
-
-	//print 0 1 2 3 4 ...
-	cout << "   ";
-	for (int i = 0; i < boardsize; i++) {
-		cout << " " << i;
-	}
-	cout << endl;
-
-	//print 1st +--------+
-	printrow();
-
-	//print A B C D and | |
-	for (int i = 0; i < boardsize; i++) {
-		char k='A';
-		(int)k;
-		k=k+i;
-		cout << (char)k << " |";
-
-		for (int i = 0; i < (boardsize * 2 + 1); i++) {
-			cout << " ";
+			char k = 'A';
+			k += i;
+			cout << (char)k << " |";
+			for (int j = 0; j < boardsize; j++) {
+				cout << " " << (char)game[i][j];
+			}
+			cout << " |" << endl;
 		}
-		cout << "|" << endl;
+		printrow();
+		
 	}
-	//print 2nd +--------+
-	printrow();
+	void dropblocks(int a, char c) {
+		for (int i = 0; i < boardsize; i++) {
+			if (i == boardsize - 1)
+			{
+				game[i][a] = c;
+				break;
+			}
+			if (game[i][a] == 0)
+				continue;
+			else if (game[i][a] != 0)
+				game[i-1][a] = c;
+			
+		}
+		printArray();
+		};
+	void printboard() {
+
+		cout << endl;
+		
+		//print 0 1 2 3 4 ...
+		cout << "   ";
+		for (int i = 0; i < boardsize; i++) {
+			cout << " " << i;
+		}
+		cout << endl;
+	}
+private:
+	
+};
+class block {
+public:
+	char generate() {
+		srand(time(0));
+		r = 1 + rand() % 4;
+		switch (r) {
+		case 1: r = 'X'; cout << "X"; break;
+		case 2: r = 'O'; cout << "O"; break;
+		case 3: r = '#'; cout << "#"; break;
+		case 4: r = '$'; cout << "$"; break;
+
+		default:
+			cout << "System error" << endl;
+			break;
+		}
+		return r;
+	}
+
+private:
+	int r;
+};
+void rotate() {
+	for (int i = 0; i<columns; i++) {
+		for (int j = 0; j<rows; j++) {
+			game[i][j] = game[rows - 1 - j][i];
+		}
+	}
+	;
 }
 
 void StartGame()
 {
-	// Insert StartGame code here
+	char a, b;
 	cout << endl;
-	cout << "StartGame" << endl; //test only, del after finishing the code
-	board();
-
-	//Board size code
-    
-
+	cout << "StartGame" << endl;
+	system("cls");
+	board board;
+	block leftblock, rightblock;
+	a=leftblock.generate();
+	b=rightblock.generate();
+	cout << endl;
+	board.printArray();
+	int i;
+	cin >> i;
+	system("cls");
+	board.dropblocks(i, a);
+	board.dropblocks(i, b);
+	system("pause");
 }
+//function used for print board
 
 void ChangeBoardSize()
 {
@@ -141,12 +200,13 @@ void Credits()
 }
 
 void exit() {
+	//Insert exit code here
 	cout << "exit";
 
 }
 
 int main() {
-   	int choice;
+	int choice;
 
 	WelcomeMessage();
 
