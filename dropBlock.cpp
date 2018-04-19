@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdlib.h>
+#include <string>
 using namespace std;
 
 int boardsize = 6;
@@ -28,6 +29,27 @@ void WelcomeMessage()
 
 class board {
 public:
+	void ChangeBoardSize()
+	{
+		int num = 0;
+		cout << "----------------------------------------------" << endl;
+		cout << "[1] Change Board Size" << endl; //test only, del after finishing the code
+		cout << "You can change board size here." << endl;
+		cout << "Please enter a size(6-10): ";
+		cin >> num;
+		if (num >= 6 && num <= 10)
+		{
+			boardsize = num;
+			cout << "You have changed the Board Size to " << boardsize << endl;
+			cout << "----------------------------------------------" << endl;
+		}
+		else {
+			cout << "You can only enter 6-10! " << endl;
+			cout << "----------------------------------------------" << endl;
+			ChangeBoardSize();
+		}
+	}
+
 	//function used for printing +------+
 	void printrow() {
 		cout << "  ";
@@ -51,27 +73,56 @@ public:
 			k += i;
 			cout << (char)k << " |";
 			for (int j = 0; j < boardsize; j++) {
-				cout << " " << (char)game[i][j];
+				cout << " " << (char)game[i+1][j];
 			}
 			cout << " |" << endl;
 		}
 		printrow();
 		
 	}
-	void dropblocks(int a, char c) {
-		for (int i = 0; i < boardsize; i++) {
-			if (i == boardsize - 1)
-			{
-				game[i][a] = c;
-				break;
-			}
-			if (game[i][a] == 0)
-				continue;
-			else if (game[i][a] != 0)
-				game[i-1][a] = c;
+	void rotate() {
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10/2; j++) {
+				
+				game[i][j] = game[rows - 1 - j][i];
 			
+			}
 		}
-		printArray();
+		
+	};
+	void dropblocks(int a, char c, char d) {
+		
+		
+			int temp = 0;
+			for (int i = 0; i < boardsize; i++) {
+				game[i][a] = c;
+				game[i][a + 1] = d;
+				if (game[i + 1][a] == 0 && game[i + 1][a + 1] == 0)
+				{
+					game[i + 1][a] = game[i][a];
+					game[i + 1][a + 1] = game[i][a + 1];
+					game[i][a] = temp;
+					game[i][a + 1] = temp;
+					system("cls");
+					printArray();
+					system("pause");
+				}
+				else if (game[i + 1][a] == 0)
+				{
+					game[i + 1][a] = game[i][a];
+					game[i][a] = temp;
+					system("cls");
+					printArray();
+				}
+				else if (game[i + 1][a + 1] == 0) {
+					game[i + 1][a + 1] = game[i][a + 1];
+					game[i][a + 1] = temp;
+					system("cls");
+					printArray();
+				}
+
+			}
+		
 		};
 	void printboard() {
 
@@ -85,18 +136,17 @@ public:
 		cout << endl;
 	}
 private:
-	
 };
 class block {
 public:
-	char generate() {
-		srand(time(0));
+	char gen() {
+		
 		r = 1 + rand() % 4;
 		switch (r) {
-		case 1: r = 'X'; cout << "X"; break;
-		case 2: r = 'O'; cout << "O"; break;
-		case 3: r = '#'; cout << "#"; break;
-		case 4: r = '$'; cout << "$"; break;
+		case 1: r = 'X'; cout << r; break;
+		case 2: r = 'O'; cout << r; break;
+		case 3: r = '#'; cout << r; break;
+		case 4: r = '$'; cout << r; break;
 
 		default:
 			cout << "System error" << endl;
@@ -104,66 +154,68 @@ public:
 		}
 		return r;
 	}
-
 private:
-	int r;
+	char r = 0;
 };
-void rotate() {
-	for (int i = 0; i<columns; i++) {
-		for (int j = 0; j<rows; j++) {
-			game[i][j] = game[rows - 1 - j][i];
-		}
-	}
-	;
-}
+
 
 void StartGame()
 {
-	char a, b;
+	char a = 0, b = 0;
+	char i[5];
+	int convert = 0;
 	cout << endl;
 	cout << "StartGame" << endl;
 	system("cls");
 	board board;
 	block leftblock, rightblock;
-	a=leftblock.generate();
-	b=rightblock.generate();
-	cout << endl;
-	board.printArray();
-	int i;
-	cin >> i;
-	system("cls");
-	board.dropblocks(i, a);
-	board.dropblocks(i, b);
-	system("pause");
-}
-//function used for print board
+	int errcount = 0;
 
-void ChangeBoardSize()
-{
-	//code
-	int num = 0;
-	cout << "----------------------------------------------" << endl;
-	cout << "[1] Change Board Size" << endl; //test only, del after finishing the code
-	cout << "You can change board size here." << endl;
-	cout << "Please enter a size(6-10): ";
-	cin >> num;
-	if (num >= 6 && num <= 10)
-	{
-		boardsize = num;
-		cout << "You have changed the Board Size to " << boardsize << endl;
-		cout << "----------------------------------------------" << endl;
-	}
-	else {
-		cout << "You can only enter 6-10! " << endl;
-		cout << "----------------------------------------------" << endl;
-		ChangeBoardSize();
-	}
-}
+	do {
+		a = leftblock.gen();
+		b = rightblock.gen();
+		board.printArray();
+
+		cin >> i;
+		
+
+		do {
+			errcount = 0;
+			for (int counter = 0; i[counter] != '\0'; counter++) {
+				if (i[counter] >= '0' && i[counter] <= '9' )
+						errcount++;
+			}
+			if (errcount > 1) {
+				cout << "Out of range please input again\n";
+				cin >> i;
+			}
+
+		} while (errcount > 1);
+
+				for (int counter = 0; i[counter] != '\0'; counter++) {
+					if (i[counter] >= '0' && i[counter] < '0' + boardsize) {
+						convert = i[counter] - '0';
+						system("cls");
+						board.dropblocks(convert, a, b);
+						break;
+					}
+					else if (i[counter] == 'r' || i[counter] == 'R') {
+						board.rotate();
+						break;
+					}
+				}
+
+			} while (game[0][0] == 0);
+		}
+	
+
+
 
 void Settings()
 {
 	// Code for setting
 	int choice;
+	board board;
 	cout << endl << endl;
 	cout << "*** Settings Menu ***" << endl;
 	cout << "[1] Change Board Size" << endl;
@@ -175,7 +227,7 @@ void Settings()
 
 	switch (choice)
 	{
-	case 1: ChangeBoardSize(); break;
+	case 1: board.ChangeBoardSize(); break;
 	case 2: break;
 	default:
 		cout << "Option (1 - 2) only!";
@@ -209,6 +261,7 @@ int main() {
 	int choice;
 
 	WelcomeMessage();
+	srand(time(0));
 
 	do { //Back to menu after choice option
 		cout << endl;
