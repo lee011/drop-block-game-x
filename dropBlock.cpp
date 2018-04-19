@@ -279,7 +279,7 @@ void exit() {
         cout << "Are you sure you want to leave?(Y/N)" << endl;
         cin >> check;
         if (check == 'Y' || check == 'y') {
-            exit(0);;
+            exit(0);
         } else if (check == 'N' || check == 'n') {
             break;
         } else {
@@ -317,7 +317,7 @@ int main() {
                 cout << "Option (1-5) only!" << endl;
                 break;
         }
-    } while (choice != 5);
+    } while (choice != 0);
 
 
     return 0;
