@@ -3,14 +3,11 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdlib.h>
-#include <string>
+#include <cstring>
 using namespace std;
 
 int boardsize = 6;
-const int rows = 10;
-const int columns = 10;
-char game[rows][columns] = {0};
-
+char temp[6][6], temp1[7][7], temp2[8][8], temp3[9][9], temp4[10][10];
 void WelcomeMessage()
 {
 	// show welcome message
@@ -49,7 +46,6 @@ public:
 			ChangeBoardSize();
 		}
 	}
-
 	//function used for printing +------+
 	void printrow() {
 		cout << "  ";
@@ -73,57 +69,253 @@ public:
 			k += i;
 			cout << (char)k << " |";
 			for (int j = 0; j < boardsize; j++) {
-				cout << " " << (char)game[i+1][j];
+				if (boardsize == 6)
+					cout << " " << (char)temp[i][j];
+				else if (boardsize == 7)
+					cout << " " << (char)temp1[i][j];
+				else if (boardsize == 8)
+					cout << " " << (char)temp2[i][j];
+				else if (boardsize == 9)
+					cout << " " << (char)temp3[i][j];
+				else if (boardsize == 10)
+					cout << " " << (char)temp4[i][j];
 			}
 			cout << " |" << endl;
 		}
 		printrow();
-		
+
 	}
-	void rotate() {
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10/2; j++) {
-				
-				game[i][j] = game[rows - 1 - j][i];
-			
+	void antirotate() {
+		if (boardsize == 6) {
+			for (int x = 0; x < boardsize / 2; x++)
+			{
+				for (int y = x; y < boardsize-x-1; y++)
+				{
+					int t = temp[x][y];
+					temp[x][y] = temp[y][boardsize-1-x];
+					temp[y][boardsize-1-x] = temp[boardsize-1-x][boardsize-1-y];
+					temp[boardsize-1-x][boardsize-1-y] = temp[boardsize-1-y][x];
+					temp[boardsize-1-y][x] = t;
+				}
 			}
 		}
-		
-	};
-	void dropblocks(int a, char c, char d) {
-		
-		
-			int temp = 0;
-			for (int i = 0; i < boardsize; i++) {
-				game[i][a] = c;
-				game[i][a + 1] = d;
-				if (game[i + 1][a] == 0 && game[i + 1][a + 1] == 0)
+		else if (boardsize == 7) {
+			for (int x = 0; x < boardsize / 2; x++)
+			{
+				for (int y = x; y < boardsize-x-1; y++)
 				{
-					game[i + 1][a] = game[i][a];
-					game[i + 1][a + 1] = game[i][a + 1];
-					game[i][a] = temp;
-					game[i][a + 1] = temp;
-					system("cls");
-					printArray();
-					system("pause");
+					int t = temp1[x][y];
+					temp1[x][y] = temp1[y][boardsize-1-x];
+					temp1[y][boardsize-1-x] = temp1[boardsize-1-x][boardsize-1-y];
+					temp1[boardsize-1-x][boardsize-1-y] = temp1[boardsize-1-y][x];
+					temp1[boardsize-1-y][x] = t;
 				}
-				else if (game[i + 1][a] == 0)
-				{
-					game[i + 1][a] = game[i][a];
-					game[i][a] = temp;
-					system("cls");
-					printArray();
-				}
-				else if (game[i + 1][a + 1] == 0) {
-					game[i + 1][a + 1] = game[i][a + 1];
-					game[i][a + 1] = temp;
-					system("cls");
-					printArray();
-				}
-
 			}
 		
-		};
+		}
+		else if (boardsize == 8) {
+			for (int x = 0; x < boardsize / 2; x++)
+			{
+				for (int y = x; y < boardsize - x - 1; y++)
+				{
+					int t = temp2[x][y];
+					temp2[x][y] = temp2[y][boardsize - 1 - x];
+					temp2[y][boardsize - 1 - x] = temp2[boardsize - 1 - x][boardsize - 1 - y];
+					temp2[boardsize - 1 - x][boardsize - 1 - y] = temp2[boardsize - 1 - y][x];
+					temp2[boardsize - 1 - y][x] = t;
+				}
+			}
+
+		}
+		else if (boardsize == 9) {
+			for (int x = 0; x < boardsize / 2; x++)
+			{
+				for (int y = x; y < boardsize - x - 1; y++)
+				{
+					int t = temp3[x][y];
+					temp3[x][y] = temp3[y][boardsize - 1 - x];
+					temp3[y][boardsize - 1 - x] = temp3[boardsize - 1 - x][boardsize - 1 - y];
+					temp3[boardsize - 1 - x][boardsize - 1 - y] = temp3[boardsize - 1 - y][x];
+					temp3[boardsize - 1 - y][x] = t;
+				}
+			}
+
+		}
+		else if (boardsize == 10) {
+			for (int x = 0; x < boardsize / 2; x++)
+			{
+				for (int y = x; y < boardsize - x - 1; y++)
+				{
+					int t = temp4[x][y];
+					temp4[x][y] = temp4[y][boardsize - 1 - x];
+					temp4[y][boardsize - 1 - x] = temp4[boardsize - 1 - x][boardsize - 1 - y];
+					temp4[boardsize - 1 - x][boardsize - 1 - y] = temp4[boardsize - 1 - y][x];
+					temp4[boardsize - 1 - y][x] = t;
+				}
+			}
+
+		}
+
+	}
+	void rotate() {
+		antirotate();
+		antirotate();
+		antirotate();
+	}
+	void dropblocks(int a, char c, char d) {
+	int t = 0;
+	board board;
+	if (boardsize == 6) {
+		for (int i = 0; i < boardsize - 1; i++) {
+			temp[i][a] = c;
+			temp[i][a + 1] = d;
+			if (temp[i + 1][a] == 0 && temp[i + 1][a + 1] == 0)
+			{
+				temp[i + 1][a] = temp[i][a];
+				temp[i + 1][a + 1] = temp[i][a + 1];
+				temp[i][a] = t;
+				temp[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+				system("pause");
+			}
+			else if (temp[i + 1][a] == 0)
+			{
+				temp[i + 1][a] = temp[i][a];
+				temp[i][a] = t;
+				system("cls");
+				board.printArray();
+			}
+			else if (temp[i + 1][a + 1] == 0) {
+				temp[i + 1][a + 1] = temp[i][a + 1];
+				temp[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+			}
+
+		}
+	}
+	else if (boardsize == 7) {
+		for (int i = 0; i < boardsize - 1; i++) {
+			temp1[i][a] = c;
+			temp1[i][a + 1] = d;
+			if (temp1[i + 1][a] == 0 && temp1[i + 1][a + 1] == 0)
+			{
+				temp1[i + 1][a] = temp1[i][a];
+				temp1[i + 1][a + 1] = temp1[i][a + 1];
+				temp1[i][a] = t;
+				temp1[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+				system("pause");
+			}
+			else if (temp1[i + 1][a] == 0)
+			{
+				temp1[i + 1][a] = temp1[i][a];
+				temp1[i][a] = t;
+				system("cls");
+				board.printArray();
+			}
+			else if (temp1[i + 1][a + 1] == 0) {
+				temp1[i + 1][a + 1] = temp1[i][a + 1];
+				temp1[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+			}
+
+		}
+	}
+	else if (boardsize == 8) {
+		for (int i = 0; i < boardsize - 1; i++) {
+			temp2[i][a] = c;
+			temp2[i][a + 1] = d;
+			if (temp2[i + 1][a] == 0 && temp2[i + 1][a + 1] == 0)
+			{
+				temp2[i + 1][a] = temp2[i][a];
+				temp2[i + 1][a + 1] = temp2[i][a + 1];
+				temp2[i][a] = t;
+				temp2[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+				system("pause");
+			}
+			else if (temp2[i + 1][a] == 0)
+			{
+				temp2[i + 1][a] = temp2[i][a];
+				temp2[i][a] = t;
+				system("cls");
+				board.printArray();
+			}
+			else if (temp2[i + 1][a + 1] == 0) {
+				temp2[i + 1][a + 1] = temp2[i][a + 1];
+				temp2[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+			}
+
+		}
+	}
+	else if (boardsize == 9) {
+		for (int i = 0; i < boardsize - 1; i++) {
+			temp3[i][a] = c;
+			temp3[i][a + 1] = d;
+			if (temp3[i + 1][a] == 0 && temp3[i + 1][a + 1] == 0)
+			{
+				temp3[i + 1][a] = temp3[i][a];
+				temp3[i + 1][a + 1] = temp3[i][a + 1];
+				temp3[i][a] = t;
+				temp3[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+				system("pause");
+			}
+			else if (temp3[i + 1][a] == 0)
+			{
+				temp3[i + 1][a] = temp3[i][a];
+				temp3[i][a] = t;
+				system("cls");
+				board.printArray();
+			}
+			else if (temp3[i + 1][a + 1] == 0) {
+				temp3[i + 1][a + 1] = temp3[i][a + 1];
+				temp3[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+			}
+
+		}
+	}
+	else if (boardsize == 10) {
+		for (int i = 0; i < boardsize - 1; i++) {
+			temp4[i][a] = c;
+			temp4[i][a + 1] = d;
+			if (temp4[i + 1][a] == 0 && temp4[i + 1][a + 1] == 0)
+			{
+				temp4[i + 1][a] = temp4[i][a];
+				temp4[i + 1][a + 1] = temp4[i][a + 1];
+				temp4[i][a] = t;
+				temp4[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+				system("pause");
+			}
+			else if (temp4[i + 1][a] == 0)
+			{
+				temp4[i + 1][a] = temp4[i][a];
+				temp4[i][a] = t;
+				system("cls");
+				board.printArray();
+			}
+			else if (temp4[i + 1][a + 1] == 0) {
+				temp4[i + 1][a + 1] = temp4[i][a + 1];
+				temp4[i][a + 1] = t;
+				system("cls");
+				board.printArray();
+			}
+
+		}
+	}
+}
 	void printboard() {
 
 		cout << endl;
@@ -158,39 +350,47 @@ private:
 	char r = 0;
 };
 
-
+class game {
+public:
 void StartGame()
 {
-	char a = 0, b = 0;
+	char a = 0, b = 0,input;
 	char i[5];
-	int convert = 0;
+	int convert = 0 ;
 	cout << endl;
 	cout << "StartGame" << endl;
 	system("cls");
 	board board;
 	block leftblock, rightblock;
-	int errcount = 0;
-
+	int dbcount = 0,errcount=0;
 	do {
 		a = leftblock.gen();
 		b = rightblock.gen();
 		board.printArray();
 
 		cin >> i;
-		
-
+		input = i[5];
 		do {
-			errcount = 0;
+			dbcount= 0;
 			for (int counter = 0; i[counter] != '\0'; counter++) {
-				if (i[counter] >= '0' && i[counter] <= '9' )
-						errcount++;
-			}
-			if (errcount > 1) {
+				if (i[counter] >= '0' && i[counter] <= '9')
+				{
+					dbcount++;
+					continue;
+				}
+				else if (i[counter] == 'r')
+				break;
+				else if (i[counter] == 'R')
+				break;
+				else 
+					errcount++;
+					continue;
+				}
+			if (dbcount > 1|| errcount >= 1) {
 				cout << "Out of range please input again\n";
 				cin >> i;
 			}
-
-		} while (errcount > 1);
+		} while (dbcount > 1);
 
 				for (int counter = 0; i[counter] != '\0'; counter++) {
 					if (i[counter] >= '0' && i[counter] < '0' + boardsize) {
@@ -199,18 +399,21 @@ void StartGame()
 						board.dropblocks(convert, a, b);
 						break;
 					}
-					else if (i[counter] == 'r' || i[counter] == 'R') {
+					else if (i[counter] == 'r') {
 						board.rotate();
+						system("cls");
+						board.printArray();
+						break;
+					}
+					else if (i[counter] == 'R') {
+						board.antirotate();
+						system("cls");
+						board.printArray();
 						break;
 					}
 				}
-
-			} while (game[0][0] == 0);
-		}
-	
-
-
-
+	} while (i[5] !='Quit');
+}
 void Settings()
 {
 	// Code for setting
@@ -224,82 +427,38 @@ void Settings()
 	cout << "Option (1 - 2): ";
 	cin >> choice;
 	cout << endl;
-
 	switch (choice)
-	{
-	case 1: board.ChangeBoardSize(); break;
+	{case 1: board.ChangeBoardSize(); break;
 	case 2: break;
 	default:
-		cout << "Option (1 - 2) only!";
-		break;
+		cout << "Option (1 - 2) only!";break;
 	}
-
-
 }
-
 void Instructions()
 {
 	// Insert instructions code here
-	cout << "Instructions:" << endl; //test only, del after finishing the code
-	cout << "Use keyboard to play this EXCITING and INTERESTING drop block game" << endl;
-	cout << "Input 'r' or 'R' to rotate the blocks, each rotation can change the segment 90° clockwise." << endl;
-	cout << "You can input 'r' up to 3 times, which means at most you can rotate the segment 270°" << endl;
-	cout << "Input the NUMBER key to change the drop position" << endl;
-	cout << "↓↓↓Drop position and corresponding NUMBERs will show like this↓↓↓" << endl;
-	cout <<"     ↓ ↓ ↓ ↓ ↓ ↓  INPUT THIS NUMBERS!!" << endl;
-	cout <<"     0 1 2 3 4 5 " << endl;
-	cout <<"   +-------------+" << endl;
-	cout <<" A |             |" << endl;
-	cout <<" B |             |" << endl;
-	cout <<" C |             |" << endl;
-	cout <<" D |             |" << endl;
-	cout <<" E |             |" << endl;
-	cout <<" F |             |" << endl;
-	cout <<"   +-------------+" << endl;
-	cout << "You should input ALL you command in ONE time." << endl;
-	cout << "e.g. 'rrr4', 'R3', '5'" << endl << endl;
-	cout << setw(50) << "GOOD LUCK, HAVE FUN." << endl;
+	cout << "Instructions" << endl; //test only, del after finishing the code
 
 }
-
 void Credits()
 {
 	//Insert Credits code here
-	cout<<"~~~~~~~Credits~~~~~~~~"<<endl;
-    	cout<<"~~~~~~Group members:~~~~~~"<<endl;
-    	cout<<"Wong Ka Wai-17167572     Wong Cho Lam-17169147A"<<endl;
-    	cout<<"Lee Ka Lok-17065440A       Chan Chung Yan-17073402A"<<endl;
-    	cout<<"Hsieh Cheng Hsun-17024850A   Lee Chin Fung-17109777A"<<endl;
-    	cout<<"  "<<endl;
-    	cout<<"      Class : CCN2042 Computer Programming      "<<endl;
-    	cout<<"  "<<endl;
-    	cout<<"      Tutoial group 202   Group 7      "<<endl;
+	cout << "Credits" << endl; //test only, del after finishing the code
 
 }
-
 void exit() {
-	char check = 'd';
-    	while (check != 'Y' || check != 'N' || check != 'y' || check != 'n') {
-		cout << "Are you sure you want to leave?(Y/N)" << endl;
-        	cin >> check;
-        	if (check == 'Y' || check == 'y') {
-            		exit(0);;
-        	}
-        	else if (check == 'N' || check == 'n') {
-        	    	break;
-        	}
-        	else {
-            	cout << "Please input Y/y or N/n only!";
-        	}
-    	}
+	//Insert exit code here
+	cout << "exit";
+
 }
+private:
+};
 
 int main() {
 	int choice;
-
+	game dbgame;
 	WelcomeMessage();
 	srand(time(0));
-
 	do { //Back to menu after choice option
 		cout << endl;
 		cout << "*** Game Menu ***" << endl;
@@ -311,20 +470,16 @@ int main() {
 		cout << "*****************" << endl;
 		cout << "Option (1 - 5): ";
 		cin >> choice;
-
 		switch (choice) {
-		case 1: StartGame(); break;
-		case 2: Settings(); break;
-		case 3: Instructions(); break;
-		case 4: Credits(); break;
-		case 5: exit(); break;
-
+		case 1: dbgame.StartGame(); break;
+		case 2: dbgame.Settings(); break;
+		case 3: dbgame.Instructions(); break;
+		case 4: dbgame.Credits(); break;
+		case 5: break;
 		default:
 			cout << "Option (1-5) only!" << endl;
-			break;
-		}
+			break;}
 	} while (choice != 5);
-
-	
+	dbgame.exit();
 	return 0;
 }
