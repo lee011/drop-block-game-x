@@ -273,15 +273,15 @@ void Credits()
 
 }
 
-void exit() {
+int exit() {
     char check = 'd';
     while (check != 'Y' || check != 'N' || check != 'y' || check != 'n') {
         cout << "Are you sure you want to leave?(Y/N)" << endl;
         cin >> check;
         if (check == 'Y' || check == 'y') {
-            exit(0);;
+            return 1;
         } else if (check == 'N' || check == 'n') {
-            break;
+            return 0;
         } else {
             cout << "Please input Y/y or N/n only!";
         }
@@ -311,7 +311,7 @@ int main() {
             case 2: Settings(); break;
             case 3: Instructions(); break;
             case 4: Credits(); break;
-            case 5: exit(); break;
+            case 5: if (!exit()) choice = 1; break;
 
             default:
                 cout << "Option (1-5) only!" << endl;
