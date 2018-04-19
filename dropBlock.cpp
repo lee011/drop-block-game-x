@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdlib.h>
+#include <string>
 using namespace std;
 
 int boardsize = 6;
