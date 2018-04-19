@@ -154,7 +154,15 @@ void Instructions()
 void Credits()
 {
 	//Insert Credits code here
-	cout << "Credits" << endl; //test only, del after finishing the code
+	cout<<"~~~~~~~Credits~~~~~~~~"<<endl;
+    	cout<<"~~~~~~Group members:~~~~~~"<<endl;
+    	cout<<"Wong Ka Wai-17167572     Wong Cho Lam-17169147A"<<endl;
+    	cout<<"Lee Ka Lok-17065440A       Chan Chung Yan-17073402A"<<endl;
+    	cout<<"Hsieh Cheng Hsun-17024850A   Lee Chin Fung-17109777A"<<endl;
+    	cout<<"  "<<endl;
+    	cout<<"      Class : CCN2042 Computer Programming      "<<endl;
+    	cout<<"  "<<endl;
+    	cout<<"      Tutoial group 202   Group 7      "<<endl;
 
 }
 
@@ -164,10 +172,10 @@ void exit() {
 		cout << "Are you sure you want to leave?(Y/N)" << endl;
         	cin >> check;
         	if (check == 'Y' || check == 'y') {
-            	break;
+            		exit(0);;
         	}
         	else if (check == 'N' || check == 'n') {
-        	    break;
+        	    	break;
         	}
         	else {
             	cout << "Please input Y/y or N/n only!";
@@ -198,7 +206,7 @@ int main() {
 		case 2: Settings(); break;
 		case 3: Instructions(); break;
 		case 4: Credits(); break;
-		case 5: break;
+		case 5: exit(); break;
 
 		default:
 			cout << "Option (1-5) only!" << endl;
@@ -206,6 +214,6 @@ int main() {
 		}
 	} while (choice != 5);
 
-	exit();
+	
 	return 0;
 }
