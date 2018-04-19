@@ -240,21 +240,58 @@ void Settings()
 void Instructions()
 {
 	// Insert instructions code here
-	cout << "Instructions" << endl; //test only, del after finishing the code
+	cout << "Instructions:" << endl; //test only, del after finishing the code
+	cout << "Use keyboard to play this EXCITING and INTERESTING drop block game" << endl;
+	cout << "Input 'r' or 'R' to rotate the blocks, each rotation can change the segment 90° clockwise." << endl;
+	cout << "You can input 'r' up to 3 times, which means at most you can rotate the segment 270°" << endl;
+	cout << "Input the NUMBER key to change the drop position" << endl;
+	cout << "↓↓↓Drop position and corresponding NUMBERs will show like this↓↓↓" << endl;
+	cout <<"     ↓ ↓ ↓ ↓ ↓ ↓  INPUT THIS NUMBERS!!" << endl;
+	cout <<"     0 1 2 3 4 5 " << endl;
+	cout <<"   +-------------+" << endl;
+	cout <<" A |             |" << endl;
+	cout <<" B |             |" << endl;
+	cout <<" C |             |" << endl;
+	cout <<" D |             |" << endl;
+	cout <<" E |             |" << endl;
+	cout <<" F |             |" << endl;
+	cout <<"   +-------------+" << endl;
+	cout << "You should input ALL you command in ONE time." << endl;
+	cout << "e.g. 'rrr4', 'R3', '5'" << endl << endl;
+	cout << setw(50) << "GOOD LUCK, HAVE FUN." << endl;
 
 }
 
 void Credits()
 {
 	//Insert Credits code here
-	cout << "Credits" << endl; //test only, del after finishing the code
+	cout<<"~~~~~~~Credits~~~~~~~~"<<endl;
+    	cout<<"~~~~~~Group members:~~~~~~"<<endl;
+    	cout<<"Wong Ka Wai-17167572     Wong Cho Lam-17169147A"<<endl;
+    	cout<<"Lee Ka Lok-17065440A       Chan Chung Yan-17073402A"<<endl;
+    	cout<<"Hsieh Cheng Hsun-17024850A   Lee Chin Fung-17109777A"<<endl;
+    	cout<<"  "<<endl;
+    	cout<<"      Class : CCN2042 Computer Programming      "<<endl;
+    	cout<<"  "<<endl;
+    	cout<<"      Tutoial group 202   Group 7      "<<endl;
 
 }
 
 void exit() {
-	//Insert exit code here
-	cout << "exit";
-
+	char check = 'd';
+    	while (check != 'Y' || check != 'N' || check != 'y' || check != 'n') {
+		cout << "Are you sure you want to leave?(Y/N)" << endl;
+        	cin >> check;
+        	if (check == 'Y' || check == 'y') {
+            		exit(0);;
+        	}
+        	else if (check == 'N' || check == 'n') {
+        	    	break;
+        	}
+        	else {
+            	cout << "Please input Y/y or N/n only!";
+        	}
+    	}
 }
 
 int main() {
@@ -280,7 +317,7 @@ int main() {
 		case 2: Settings(); break;
 		case 3: Instructions(); break;
 		case 4: Credits(); break;
-		case 5: break;
+		case 5: exit(); break;
 
 		default:
 			cout << "Option (1-5) only!" << endl;
@@ -288,6 +325,6 @@ int main() {
 		}
 	} while (choice != 5);
 
-	exit();
+	
 	return 0;
 }
