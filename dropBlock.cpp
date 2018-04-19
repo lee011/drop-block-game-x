@@ -3,7 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdlib.h>
-#include <string>
+#include <cstring>
 using namespace std;
 
 int boardsize = 6;
@@ -412,7 +412,7 @@ void StartGame()
 						break;
 					}
 				}
-	} while (i[5] =='Quit');
+	} while (i[5] !='Quit');
 }
 void Settings()
 {
