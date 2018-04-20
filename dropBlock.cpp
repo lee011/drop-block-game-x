@@ -3,14 +3,11 @@
 #include <ctime>
 #include <cstdlib>
 #include <stdlib.h>
-#include <string>
+#include <cstring>
 using namespace std;
 
 int boardsize = 6;
-const int rows = 10;
-const int columns = 10;
-char game[rows][columns] = { 0 };
-
+char temp[10][10];
 void WelcomeMessage()
 {
     // show welcome message
@@ -48,7 +45,6 @@ public:
             ChangeBoardSize();
         }
     }
-
     //function used for printing +------+
     void printrow() {
         cout << "  ";
@@ -72,55 +68,173 @@ public:
             k += i;
             cout << (char)k << " |";
             for (int j = 0; j < boardsize; j++) {
-                cout << " " << (char)game[i + 1][j];
+                cout << " " << (char)temp[i + 1][j];
+
             }
             cout << " |" << endl;
         }
         printrow();
 
     }
-    void rotate() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10 / 2; j++) {
+    void anticlock() {
+        //if (boardsize == 6) {
+        for (int x = 0; x * 2 < boardsize; x++)
+        {
+            for (int y = x; y < boardsize - x - 1; y++)
+            {
 
-                game[i][j] = game[rows - 1 - j][i];
-
+                int t = temp[x + 1][y];
+                temp[x + 1][y] = temp[y + 1][boardsize - 1 - x];
+                temp[y + 1][boardsize - x - 1] = temp[boardsize - x][boardsize - 1 - y];
+                temp[boardsize - x][boardsize - 1 - y] = temp[boardsize - y][x];
+                temp[boardsize - y][x] = t;
             }
         }
-
-    };
-    void dropblocks(int a, char c, char d) {
-
-
-        int temp = 0;
+    }
+    void clock() {
+        anticlock();
+        anticlock();
+        anticlock();
+    }
+    void dropblocks(int a, char c, char d, int& dp1, int& dp2) {
+        int t = 0;
+        board board;
+        dp1 = 0, dp2 = 0;
+        //if (boardsize == 6) {
         for (int i = 0; i < boardsize; i++) {
-            game[i][a] = c;
-            game[i][a + 1] = d;
-            if (game[i + 1][a] == 0 && game[i + 1][a + 1] == 0)
+            temp[0][a] = c;
+            temp[0][a + 1] = d;
+            if (temp[i + 1][a] == 0 && temp[i + 1][a + 1] == 0)
             {
-                game[i + 1][a] = game[i][a];
-                game[i + 1][a + 1] = game[i][a + 1];
-                game[i][a] = temp;
-                game[i][a + 1] = temp;
+                temp[i + 1][a] = temp[i][a];
+                temp[i + 1][a + 1] = temp[i][a + 1];
+                temp[i][a] = t;
+                temp[i][a + 1] = t;
+                temp[0][a] = 0;
+                temp[0][a + 1] = 0;
+                dp1 += 1;
+                dp2 += 1;
                 system("cls");
-                printArray();
+                board.printArray();
                 system("pause");
-            } else if (game[i + 1][a] == 0)
+            } else if (temp[i + 1][a] == 0)
             {
-                game[i + 1][a] = game[i][a];
-                game[i][a] = temp;
+                temp[i + 1][a] = temp[i][a];
+                temp[i][a] = t;
+                temp[0][a] = 0;
+                temp[0][a + 1] = 0;
+                dp1 += 1;
                 system("cls");
-                printArray();
-            } else if (game[i + 1][a + 1] == 0) {
-                game[i + 1][a + 1] = game[i][a + 1];
-                game[i][a + 1] = temp;
+                board.printArray();
+            } else if (temp[i + 1][a + 1] == 0) {
+                temp[i + 1][a + 1] = temp[i][a + 1];
+                temp[i][a + 1] = t;
+                temp[0][a] = 0;
+                temp[0][a + 1] = 0;
                 system("cls");
-                printArray();
+                dp2 += 1;
+                board.printArray();
             }
 
         }
 
-    };
+
+
+    }
+
+    void mergeblock(int a, char c, char d, int dp1, int dp2) {
+
+        int mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;//mergecounters
+        bool stop = false;
+        cout << dp1 << " " << dp2;
+
+
+        mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;
+        if (temp[dp1][a] == temp[dp1 + 1][a] && temp[dp1][a] != 0) {
+            mp += 1;
+            if (temp[dp1][a] == temp[dp1][a - 1] && temp[dp1][a] != 0)
+                lp = mp;
+            if (temp[dp1][a] == temp[dp1][a + 1] && temp[dp1][a] != 0)
+                rp = mp;
+            if (temp[dp1][a] == temp[dp1 + 2][a] && temp[dp1][a] != 0)
+                vert += 1;
+            vert += 1;
+
+        }
+        if (temp[dp1][a] == temp[dp1 + rp][a + 1] && temp[dp1][a] != 0) {
+            if (temp[dp1][a] == temp[dp1 + rp][a + 2] && temp[dp1][a] != 0)
+                right += 1;
+            right += 1;
+        }
+        if (temp[dp1][a] == temp[dp1 + lp][a - 1] && temp[dp1][a] != 0) {
+            if (temp[dp1][a] == temp[dp1 + lp][a - 2] && temp[dp1][a] != 0)
+                left += 1;
+            left += 1;
+        }
+        mercounter = left + right + vert;
+        if (mercounter >= 2)
+
+        {
+            cout << mercounter;
+            for (int i = 0; i <= right; i++) {
+                if (rp != mp)
+                    temp[dp1 + rp][a + i] = 0;
+            }
+            for (int i = 1; i <= left; i++)
+                if (lp != mp)
+                    temp[dp1 + lp][a - i] = 0;
+            for (int i = 0; i <= vert; i++) {
+                if (mp = 0 && left >= 1)
+                    temp[dp1][a] = 0;
+                else temp[dp1 + i][a] = 0;
+            }
+        }
+
+
+        mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;
+        a += 1;
+        if (temp[dp2][a] == temp[dp2 + 1][a] && temp[dp2][a] != 0) {
+            mp += 1;
+            if (temp[dp2][a] == temp[dp2][a - 1] && temp[dp2][a] != 0)
+                lp = mp;
+            if (temp[dp2][a] == temp[dp2][a + 1] && temp[dp2][a] != 0)
+                rp = mp;
+            if (temp[dp2][a] == temp[dp2 + 2][a] && temp[dp2][a] != 0)
+                vert += 1;
+            vert += 1;
+
+        }
+        if (temp[dp2][a] == temp[dp2 + rp][a + 1] && temp[dp2][a] != 0) {
+            if (temp[dp2][a] == temp[dp2 + rp][a + 2] && temp[dp2][a] != 0)
+                right += 1;
+            right += 1;
+        }
+        if (temp[dp2][a] == temp[dp2 + lp][a - 1] && temp[dp2][a] != 0) {
+            if (temp[dp2][a] == temp[dp2 + lp][a - 2] && temp[dp2][a] != 0)
+                left += 1;
+            left += 1;
+        }
+        mercounter = left + right + vert;
+        if (mercounter >= 2)
+
+        {
+            cout << mercounter;
+            for (int i = 0; i <= right; i++) {
+                if (rp != mp)
+                    temp[dp2 + rp][a + i] = 0;
+            }
+            for (int i = 1; i <= left; i++)
+                if (lp != mp)
+                    temp[dp2 + lp][a - i] = 0;
+            for (int i = 0; i <= vert; i++) {
+                if (mp = 0 && left >= 1)
+                    temp[dp2][a] = 0;
+                else temp[dp2 + i][a] = 0;
+            }
+        }
+    }
+
+
     void printboard() {
 
         cout << endl;
@@ -154,59 +268,76 @@ public:
 private:
     char r = 0;
 };
-
-
 void StartGame()
 {
-    char a = 0, b = 0;
+    char a = 0, b = 0, input;
     char i[5];
     int convert = 0;
+    int dp1 = 0, dp2 = 0; //droppoints
     cout << endl;
     cout << "StartGame" << endl;
     system("cls");
     board board;
     block leftblock, rightblock;
-    int errcount = 0;
-
+    int dbcount = 0, iserror = 0;
     do {
         a = leftblock.gen();
         b = rightblock.gen();
         board.printArray();
 
         cin >> i;
-
-
+        input = i[5];
         do {
-            errcount = 0;
+            dbcount = 0;
+            iserror = 0;
             for (int counter = 0; i[counter] != '\0'; counter++) {
                 if (i[counter] >= '0' && i[counter] <= '9')
-                    errcount++;
+                {
+                    dbcount++;
+                    continue;
+                } else if (i[counter] == 'r')
+                    break;
+                else if (i[counter] == 'R')
+                    break;
+                else
+                    iserror = 1;
+                continue;
             }
-            if (errcount > 1) {
+            if (dbcount > 1 || iserror) {
                 cout << "Out of range please input again\n";
                 cin >> i;
             }
-
-        } while (errcount > 1);
+        } while (dbcount > 1 || iserror);
 
         for (int counter = 0; i[counter] != '\0'; counter++) {
-            if (i[counter] >= '0' && i[counter] < '0' + boardsize) {
+            if (i[counter] >= '0' && i[counter] < '9' + 1) {
                 convert = i[counter] - '0';
                 system("cls");
-                board.dropblocks(convert, a, b);
+                cout << convert;
+                if (convert < boardsize - 1) {
+                    board.dropblocks(convert, a, b, dp1, dp2);
+                    board.mergeblock(convert, a, b, dp1, dp2);
+                    break;
+                } else
+                {
+                    board.printArray();
+                    cout << "Invaild Input!\n";
+                    continue;
+                }
+            } else if (i[counter] == 'r') {
+                board.clock();
+                system("cls");
+                board.printArray();
                 break;
-            } else if (i[counter] == 'r' || i[counter] == 'R') {
-                board.rotate();
+            } else if (i[counter] == 'R') {
+                board.anticlock();
+                system("cls");
+                board.printArray();
                 break;
             }
         }
-
-    } while (game[0][0] == 0);
+    } while (input != 'Quit');
 }
-
-
-
-
 void Settings()
 {
     // Code for setting
@@ -220,19 +351,14 @@ void Settings()
     cout << "Option (1 - 2): ";
     cin >> choice;
     cout << endl;
-
     switch (choice)
     {
         case 1: board.ChangeBoardSize(); break;
         case 2: break;
         default:
-            cout << "Option (1 - 2) only!";
-            break;
+            cout << "Option (1 - 2) only!"; break;
     }
-
-
 }
-
 void Instructions()
 {
     // Insert instructions code here
@@ -255,9 +381,7 @@ void Instructions()
     cout << "You should input ALL you command in ONE time." << endl;
     cout << "e.g. 'rrr4', 'R3', '5'" << endl << endl;
     cout << setw(50) << "GOOD LUCK, HAVE FUN." << endl;
-
 }
-
 void Credits()
 {
     //Insert Credits code here
@@ -270,6 +394,7 @@ void Credits()
     cout << "      Class : CCN2042 Computer Programming      " << endl;
     cout << "  " << endl;
     cout << "      Tutoial group 202   Group 7      " << endl;
+
 
 }
 
@@ -290,10 +415,8 @@ int exit() {
 
 int main() {
     int choice;
-
     WelcomeMessage();
     srand(time(0));
-
     do { //Back to menu after choice option
         cout << endl;
         cout << "*** Game Menu ***" << endl;
@@ -305,20 +428,17 @@ int main() {
         cout << "*****************" << endl;
         cout << "Option (1 - 5): ";
         cin >> choice;
-
         switch (choice) {
             case 1: StartGame(); break;
             case 2: Settings(); break;
             case 3: Instructions(); break;
             case 4: Credits(); break;
             case 5: if (!exit()) choice = 1; break;
-
             default:
                 cout << "Option (1-5) only!" << endl;
                 break;
         }
     } while (choice != 5);
-
-
+    cout << "Good bye." << endl;
     return 0;
 }
