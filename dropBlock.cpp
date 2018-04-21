@@ -7,7 +7,7 @@
 using namespace std;
 
 int boardsize = 6;
-char temp[10][10];
+char temp[11][10];
 void WelcomeMessage()
 {
     // show welcome message
@@ -46,6 +46,13 @@ public:
         }
         system("pause");
     }
+    void reset() {
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 10; j++) {
+                temp[i][j] = 0;
+            }
+        }
+    }
     //function used for printing +------+
     void printrow() {
         cout << "  ";
@@ -78,11 +85,8 @@ public:
 
     }
     void anticlock() {
-        for (int x = 0; x * 2 < boardsize; x++)
-        {
-            for (int y = x; y < boardsize - x - 1; y++)
-            {
-
+        for (int x = 0; x * 2 < boardsize; x++) {
+            for (int y = x; y < boardsize - x - 1; y++) {
                 int t = temp[x + 1][y];
                 temp[x + 1][y] = temp[y + 1][boardsize - 1 - x];
                 temp[y + 1][boardsize - x - 1] = temp[boardsize - x][boardsize - 1 - y];
@@ -90,12 +94,12 @@ public:
                 temp[boardsize - y][x] = t;
             }
         }
+        printArray();
     }
     void dropblocks(int a, char c, char d, int& dp1, int& dp2) {
         int t = 0;
         board board;
         dp1 = 0, dp2 = 0;
-        //if (boardsize == 6) {
         for (int i = 0; i < boardsize; i++) {
             temp[0][a] = c;
             temp[0][a + 1] = d;
@@ -110,6 +114,7 @@ public:
                 dp1 += 1;
                 dp2 += 1;
                 system("cls");
+                cout << "Dropping...";
                 board.printArray();
                 system("pause");
             } else if (temp[i + 1][a] == 0)
@@ -132,16 +137,26 @@ public:
             }
 
         }
-
+        score += 20;
 
 
     }
-
+    bool checkFilled() {
+        int cnt = 0;
+        for (int i = 0; i < boardsize; i++) {
+            if (temp[1][i] == 0) cnt++; else cnt = 0;
+            if (cnt == 2) return false;
+        }
+        return true;
+    }
+    bool checkDropable(int a) {
+        return (temp[1][a] == 0 && temp[1][a + 1] == 0);
+    }
     void mergeblock(int a, char c, char d, int dp1, int dp2) {
 
         int mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;//mergecounters
         bool stop = false;
-        cout << dp1 << " " << dp2;
+        //cout << dp1 << " " << dp2;
 
 
         mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;
@@ -170,7 +185,7 @@ public:
         if (mercounter >= 2)
 
         {
-            cout << mercounter;
+            //cout << mercounter;
             for (int i = 0; i <= right; i++) {
                 if (rp != mp)
                     temp[dp1 + rp][a + i] = 0;
@@ -184,7 +199,7 @@ public:
                 else temp[dp1 + i][a] = 0;
             }
         }
-
+        if (mercounter >= 2) score += 100 * pow(2, mercounter - 2);
 
         mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;
         a += 1;
@@ -213,7 +228,7 @@ public:
         if (mercounter >= 2)
 
         {
-            cout << mercounter;
+            //cout << mercounter;
             for (int i = 0; i <= right; i++) {
                 if (rp != mp)
                     temp[dp2 + rp][a + i] = 0;
@@ -227,9 +242,8 @@ public:
                 else temp[dp2 + i][a] = 0;
             }
         }
+        if (mercounter >= 2) score += 100 * pow(2, mercounter - 2);
     }
-
-
     void printboard() {
 
         cout << endl;
@@ -241,7 +255,18 @@ public:
         }
         cout << endl;
     }
+    void printScoreAndInstruction() {
+        cout << "Scores: " << score << endl;
+        cout << "Enter command: ";
+    }
+    void printGameOver() {
+        cout << "Oh! The board has been filled!" << endl;
+        cout << "GAME OVER" << endl;
+        cout << "Final Score: " << score << endl;
+    }
 private:
+    int score = 0;
+    int lastmerge = 0;
 };
 class block {
 public:
@@ -249,16 +274,19 @@ public:
 
         r = 1 + rand() % 4;
         switch (r) {
-            case 1: r = 'X'; cout << r; break;
-            case 2: r = 'O'; cout << r; break;
-            case 3: r = '#'; cout << r; break;
-            case 4: r = '$'; cout << r; break;
+            case 1: r = 'X'; break;
+            case 2: r = 'O'; break;
+            case 3: r = '#'; break;
+            case 4: r = '$'; break;
 
             default:
                 cout << "System error" << endl;
                 break;
         }
         return r;
+    }
+    void print() {
+        cout << r;
     }
 private:
     char r = 0;
@@ -273,18 +301,44 @@ void StartGame()
     cout << "StartGame" << endl;
     system("cls");
     board board;
+    board.reset();
     block leftblock, rightblock;
-    int dbcount = 0, iserror = 0;
+    int dbcount = 0;
+    bool iserror = false, shouldGenerate = true;
     do {
-        a = leftblock.gen();
-        b = rightblock.gen();
+        system("cls");
+        if (shouldGenerate) {
+            a = leftblock.gen();
+            b = rightblock.gen();
+        }
+        cout << "Next blocks: ";
+        leftblock.print();
+        cout << " ";
+        rightblock.print();
+        shouldGenerate = true;
         board.printArray();
-
+        board.printScoreAndInstruction();
         cin >> i;
-        input = i[5];
+        input = i[0];
+        if (strcmp(i, "quit") == 0) {
+            char check = 'd';
+            bool shouldQuit = false;
+            while (check != 'Y' && check != 'N' && check != 'y' && check != 'n') {
+                cout << "Are you sure you want quit?(Y/N)" << endl;
+                cin >> check;
+                if (check == 'Y' || check == 'y') {
+                    shouldQuit = true;
+                } else if (check == 'N' || check == 'n') {
+                    shouldQuit = false;
+                } else {
+                    cout << "Please input Y/y or N/n only!";
+                }
+            }
+            if (shouldQuit) break; else continue;
+        }
         do {
             dbcount = 0;
-            iserror = 0;
+            iserror = false;
             for (int counter = 0; i[counter] != '\0'; counter++) {
                 if (i[counter] >= '0' && i[counter] <= '9')
                 {
@@ -295,11 +349,11 @@ void StartGame()
                 else if (i[counter] == 'R')
                     break;
                 else
-                    iserror = 1;
+                    iserror = true;
                 continue;
             }
             if (dbcount > 1 || iserror) {
-                cout << "Out of range please input again\n";
+                cout << "Out of range. Please input again\nEnter command: ";
                 cin >> i;
             }
         } while (dbcount > 1 || iserror);
@@ -308,8 +362,14 @@ void StartGame()
             if (i[counter] >= '0' && i[counter] < '9' + 1) {
                 convert = i[counter] - '0';
                 system("cls");
-                cout << convert;
                 if (convert < boardsize - 1) {
+                    if (!board.checkDropable(convert)) {
+                        board.printArray();
+                        cout << "Blocks are not droppable in this position\n";
+                        system("pause");
+                        shouldGenerate = false;
+                        continue;
+                    }
                     board.dropblocks(convert, a, b, dp1, dp2);
                     board.mergeblock(convert, a, b, dp1, dp2);
                     break;
@@ -317,16 +377,24 @@ void StartGame()
                 {
                     board.printArray();
                     cout << "Invaild Input!\n";
+                    shouldGenerate = false;
+                    system("pause");
                     continue;
                 }
-            } else if (i[counter] == 'R'||i[counter] == 'r') {
+            }
+            /*else if (i[counter] == 'R' || i[counter] == 'r') {
                 board.anticlock();
                 system("cls");
                 board.printArray();
                 break;
-            }
+            }*/
         }
-    } while (input != 'Quit');
+        if (board.checkFilled()) {
+            board.printGameOver();
+            system("pause");
+            break;
+        }
+    } while (input != 'q');
 }
 void Settings()
 {
@@ -392,7 +460,7 @@ void Credits()
 
 int exit() {
     char check = 'd';
-    while (check != 'Y' || check != 'N' || check != 'y' || check != 'n') {
+    while (check != 'Y' && check != 'N' && check != 'y' && check != 'n') {
         cout << "Are you sure you want to leave?(Y/N)" << endl;
         cin >> check;
         if (check == 'Y' || check == 'y') {
