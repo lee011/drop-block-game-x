@@ -32,7 +32,7 @@ public:
         cout << "----------------------------------------------" << endl;
         cout << "[1] Change Board Size" << endl; //test only, del after finishing the code
         cout << "You can change board size here." << endl;
-        cout << "Please enter a size(6-10): ";
+        cout << "Please enter a size (6-10): ";
         cin >> num;
         if (num >= 6 && num <= 10)
         {
@@ -44,6 +44,7 @@ public:
             cout << "----------------------------------------------" << endl;
             ChangeBoardSize();
         }
+        system("pause");
     }
     //function used for printing +------+
     void printrow() {
@@ -370,6 +371,7 @@ void Instructions()
     cout << "You should input ALL you command in ONE time." << endl;
     cout << "e.g. 'rrr4', 'R3', '5'" << endl << endl;
     cout << setw(50) << "GOOD LUCK, HAVE FUN." << endl;
+    system("pause");
 }
 void Credits()
 {
@@ -383,6 +385,7 @@ void Credits()
     cout << "      Class : CCN2042 Computer Programming      " << endl;
     cout << "  " << endl;
     cout << "      Tutoial group 202   Group 7      " << endl;
+    system("pause");
 
 
 }
@@ -404,9 +407,10 @@ int exit() {
 
 int main() {
     int choice;
-    WelcomeMessage();
     srand(time(0));
     do { //Back to menu after choice option
+        system("cls");
+        WelcomeMessage();
         cout << endl;
         cout << "*** Game Menu ***" << endl;
         cout << "[1] Start Game" << endl;
