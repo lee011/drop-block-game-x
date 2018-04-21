@@ -156,8 +156,6 @@ public:
 
         int mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;//mergecounters
         bool stop = false;
-        //cout << dp1 << " " << dp2;
-
 
         mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;
         if (temp[dp1][a] == temp[dp1 + 1][a] && temp[dp1][a] != 0) {
@@ -196,11 +194,11 @@ public:
             for (int i = 0; i <= vert; i++) {
                 if (mp = 0 && left >= 1)
                     temp[dp1][a] = 0;
-                else temp[dp1 + i][a] = 0;
+                else if (dp1 + i != dp1 + vert) temp[dp1 + i][a] = 0;
             }
         }
         if (mercounter >= 2) score += 100 * pow(2, mercounter - 2);
-
+        
         mercounter = 0, vert = 0, left = 0, right = 0, lp = 0, rp = 0, mp = 0;
         a += 1;
         if (temp[dp2][a] == temp[dp2 + 1][a] && temp[dp2][a] != 0) {
@@ -239,7 +237,7 @@ public:
             for (int i = 0; i <= vert; i++) {
                 if (mp = 0 && left >= 1)
                     temp[dp2][a] = 0;
-                else temp[dp2 + i][a] = 0;
+                else if (dp2 + i != dp2 + vert)temp[dp2 + i][a] = 0;
             }
         }
         if (mercounter >= 2) score += 100 * pow(2, mercounter - 2);
